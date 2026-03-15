@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Questionario raccolta dati - EcoTransIT 2025</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #d9e2ec;
+      --primary: #1e4e79;
+      --primary-2: #2b6ca3;
+      --accent: #0f766e;
+      --danger: #b91c1c;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .container {
+      max-width: 1220px;
+      margin: 28px auto 60px;
+      padding: 0 18px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      margin: 6px 0;
+      max-width: 980px;
+      opacity: 0.97;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button, .button-like {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover, .button-like:hover { transform: translateY(-1px); }
+
+    .btn-primary { background: white; color: var(--primary); }
+    .btn-secondary { background: rgba(255,255,255,0.16); color: white; border: 1px solid rgba(255,255,255,0.22); }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+
+    .section {
+      background: var(--surface);
+      border: 1px solid #e7edf5;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .section h2 {
+      margin: 0 0 8px;
+      color: var(--primary);
+      font-size: 23px;
+    }
+
+    .section .lead {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .subcard {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      margin-top: 14px;
+    }
+
+    .subcard h3, .subcard h4 {
+      margin: 0 0 10px;
+      color: #173b61;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+    }
+
+    .field {
+      grid-column: span 12;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .span-6 { grid-column: span 6; }
+    .span-4 { grid-column: span 4; }
+    .span-3 { grid-column: span 3; }
+    .span-8 { grid-column: span 8; }
+    .span-9 { grid-column: span 9; }
+
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid #cfd9e6;
+      background: white;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+
+    textarea { min-height: 86px; resize: vertical; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary-2);
+      box-shadow: 0 0 0 3px rgba(43, 108, 163, 0.12);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+
+    th, td {
+      border-bottom: 1px solid #e7edf5;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      background: #eef4fb;
+      color: #1f3f63;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td input, td textarea, td select {
+      min-width: 100%;
+      font-size: 13px;
+      padding: 9px 10px;
+    }
+
+    .radio-row, .checkbox-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 18px;
+      margin-top: 4px;
+    }
+
+    .radio-row label, .checkbox-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: var(--text);
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .radio-row input, .checkbox-row input {
+      width: auto;
+      margin: 0;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .hidden { display: none; }
+
+    .route-card {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 16px;
+    }
+
+    .route-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .route-title {
+      font-size: 20px;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #e9f3ff;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .footer-bar {
+      position: sticky;
+      bottom: 14px;
+      z-index: 20;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+      margin-top: 12px;
+    }
+
+    .footer-bar-inner {
+      pointer-events: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: rgba(31, 41, 55, 0.92);
+      color: white;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .footer-bar-inner button { padding: 11px 16px; }
+
+    .small { font-size: 12px; color: var(--muted); }
+
+    .print-only { display: none; }
+
+    @media (max-width: 900px) {
+      .span-6, .span-4, .span-3, .span-8, .span-9 { grid-column: span 12; }
+      .hero h1 { font-size: 24px; }
+      .route-header { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media print {
+      body { background: white; }
+      .hero { color: #111827; background: white; border: 1px solid #d1d5db; box-shadow: none; }
+      .top-actions, .footer-bar, .no-print { display: none !important; }
+      .container { max-width: 100%; margin: 0; padding: 0; }
+      .section, .route-card, .subcard { box-shadow: none; break-inside: avoid; }
+      .print-only { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="appRoot">
+    <section class="hero">
+      <h1>Questionario raccolta dati</h1>
+      <p><strong>Calcolo degli indicatori di sostenibilità del trasporto con EcoTransIT – Anno 2025</strong></p>
+      <p>
+        Il presente questionario raccoglie i dati di input necessari al calcolo degli indicatori di sostenibilità del trasporto
+        a supporto del reporting <strong>CSR</strong>. Gli indicatori numerici finali saranno elaborati successivamente.
+      </p>
+      <div class="notice">
+        <strong>Istruzioni di compilazione:</strong> per ciascuna tratta selezionare una sola modalità di gestione:
+        <strong>1 = interamente azienda</strong>, <strong>2 = interamente terzi</strong>, <strong>3 = parzialmente azienda e parzialmente terzi</strong>.
+        In base alla selezione, il modulo mostra solo le sezioni pertinenti.
+      </div>
+      <div class="top-actions no-print">
+        <button class="btn-primary" type="button" onclick="window.print()">Scarica / Stampa PDF</button>
+        <button class="btn-secondary" type="button" onclick="downloadWord()">Scarica Word (.doc)</button>
+        <button class="btn-danger" type="button" onclick="resetFormCompletely()">Azzera questionario</button>
+      </div>
+    </section>
+
+    <form id="questionnaireForm">
+      <section class="section">
+        <h2>Sezione 1 – Elenco delle 6 principali tratte / spedizioni 2025</h2>
+        <p class="lead">Indicare le tratte o spedizioni più frequenti o più rappresentative del 2025.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID tratta</th>
+                <th>Nome tratta / servizio</th>
+                <th>Origine (città, Paese)</th>
+                <th>Destinazione (città, Paese)</th>
+                <th>Frequenza annua stimata</th>
+                <th>Peso medio per spedizione</th>
+                <th>Volume medio per spedizione</th>
+                <th>Note</th>
+              </tr>
+            </thead>
+            <tbody id="summaryTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Sezione 2 – Schede di dettaglio per tratta</h2>
+        <p class="lead">Compilare una scheda per ciascuna delle 6 tratte indicate sopra.</p>
+        <div id="routeCards"></div>
+      </section>
+
+      <section class="section">
+        <h2>Sezione 3 – Informazioni integrative per CSR</h2>
+        <p class="lead">Questa sezione raccoglie solo informazioni qualitative o di supporto utili al reporting CSR.</p>
+
+        <div class="grid">
+          <div class="field span-6">
+            <label>Sono presenti iniziative di riduzione degli impatti ambientali nel trasporto?</label>
+            <select name="csr_initiatives_present">
+              <option value="">Selezionare</option>
+              <option>Sì</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div class="field span-6">
+            <label>Sono disponibili dati ambientali storici relativi ai trasporti?</label>
+            <select name="csr_historical_data">
+              <option value="">Selezionare</option>
+              <option>Sì</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div class="field span-12">
+            <label>Se sì, specificare le iniziative / misure adottate</label>
+            <textarea name="csr_initiatives_details"></textarea>
+          </div>
+          <div class="field span-12">
+            <label>Se sì, specificare i dati ambientali storici disponibili</label>
+            <textarea name="csr_historical_details"></textarea>
+          </div>
+          <div class="field span-12">
+            <label>Sono già stati effettuati in passato calcoli o analisi ambientali sui trasporti?</label>
+            <select name="csr_previous_analysis">
+              <option value="">Selezionare</option>
+              <option>Sì</option>
+              <option>No</option>
+            </select>
+          </div>
+          <div class="field span-12">
+            <label>Se sì, specificare</label>
+            <textarea name="csr_previous_analysis_details"></textarea>
+          </div>
+          <div class="field span-12">
+            <label>Note utili per il reporting CSR</label>
+            <textarea name="csr_notes"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Sezione 4 – Referente e validazione</h2>
+        <div class="grid">
+          <div class="field span-6">
+            <label>Azienda</label>
+            <input type="text" name="company_name" />
+          </div>
+          <div class="field span-6">
+            <label>Nome e cognome del referente</label>
+            <input type="text" name="contact_name" />
+          </div>
+          <div class="field span-4">
+            <label>Funzione</label>
+            <input type="text" name="contact_role" />
+          </div>
+          <div class="field span-4">
+            <label>E-mail</label>
+            <input type="email" name="contact_email" />
+          </div>
+          <div class="field span-4">
+            <label>Telefono</label>
+            <input type="text" name="contact_phone" />
+          </div>
+          <div class="field span-4">
+            <label>Data di compilazione</label>
+            <input type="date" name="completion_date" />
+          </div>
+        </div>
+      </section>
+    </form>
+
+    <div class="footer-bar no-print">
+      <div class="footer-bar-inner">
+        <button class="btn-primary" type="button" onclick="window.print()">PDF</button>
+        <button class="btn-secondary" type="button" onclick="downloadWord()">Word</button>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    const routeCards = document.getElementById('routeCards');
+    const summaryTableBody = document.getElementById('summaryTableBody');
+    const routeCount = 6;
+
+    function createSummaryRows() {
+      let html = '';
+      for (let i = 1; i <= routeCount; i++) {
+        html += `
+          <tr>
+            <td><strong>${i}</strong></td>
+            <td><input type="text" name="summary_${i}_service_name" placeholder="Es. Chiasso - Rotterdam" /></td>
+            <td><input type="text" name="summary_${i}_origin" /></td>
+            <td><input type="text" name="summary_${i}_destination" /></td>
+            <td><input type="text" name="summary_${i}_frequency" /></td>
+            <td><input type="text" name="summary_${i}_weight" /></td>
+            <td><input type="text" name="summary_${i}_volume" /></td>
+            <td><textarea name="summary_${i}_notes"></textarea></td>
+          </tr>
+        `;
+      }
+      summaryTableBody.innerHTML = html;
+    }
+
+    function createRouteCard(i) {
+      return `
+        <article class="route-card" id="route-card-${i}">
+          <div class="route-header">
+            <div class="route-title">Scheda Tratta ${i}</div>
+            <div class="badge">ID tratta ${i}</div>
+          </div>
+
+          <div class="subcard">
+            <h3>1. Identificazione tratta</h3>
+            <div class="grid">
+              <div class="field span-4">
+                <label>ID tratta</label>
+                <input type="text" name="route_${i}_id" value="${i}" readonly />
+              </div>
+              <div class="field span-8">
+                <label>Nome tratta / servizio</label>
+                <input type="text" name="route_${i}_service_name" />
+              </div>
+              <div class="field span-6">
+                <label>Origine (città, Paese)</label>
+                <input type="text" name="route_${i}_origin" />
+              </div>
+              <div class="field span-6">
+                <label>Destinazione (città, Paese)</label>
+                <input type="text" name="route_${i}_destination" />
+              </div>
+              <div class="field span-12">
+                <label>Eventuali hub / terminal / punti intermedi rilevanti</label>
+                <textarea name="route_${i}_hubs"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="subcard">
+            <h3>2. Modello di gestione della tratta</h3>
+            <div class="radio-row">
+              <label><input type="radio" name="route_${i}_management" value="1" onchange="toggleManagement(${i})" /> 1 = Gestita interamente dall'azienda</label>
+              <label><input type="radio" name="route_${i}_management" value="2" onchange="toggleManagement(${i})" /> 2 = Gestita interamente da terzi</label>
+              <label><input type="radio" name="route_${i}_management" value="3" onchange="toggleManagement(${i})" /> 3 = Gestita parzialmente dall'azienda e parzialmente da terzi</label>
+            </div>
+            <div class="field" style="margin-top:14px;">
+              <label>Se 3, descrivere sinteticamente la suddivisione della tratta</label>
+              <textarea name="route_${i}_split_description"></textarea>
+            </div>
+          </div>
+
+          <div class="subcard company-section hidden" id="route_${i}_company_section">
+            <h3>Parte A – Tratta gestita dall'azienda</h3>
+            <p class="small">Compilare solo se la tratta è gestita interamente dall'azienda oppure in modo misto.</p>
+
+            <h4>A.1 Dati operativi</h4>
+            <div class="grid">
+              <div class="field span-4">
+                <label>Numero spedizioni nel 2025</label>
+                <input type="text" name="route_${i}_company_shipments" />
+              </div>
+              <div class="field span-4">
+                <label>Peso medio per spedizione (kg o t)</label>
+                <input type="text" name="route_${i}_company_weight" />
+              </div>
+              <div class="field span-4">
+                <label>Volume medio per spedizione (m³)</label>
+                <input type="text" name="route_${i}_company_volume" />
+              </div>
+              <div class="field span-6">
+                <label>Numero medio pallet (se disponibile)</label>
+                <input type="text" name="route_${i}_company_pallets" />
+              </div>
+              <div class="field span-6">
+                <label>Grado medio di riempimento (%)</label>
+                <input type="text" name="route_${i}_company_fillrate" />
+              </div>
+            </div>
+
+            <h4>A.2 Modalità di trasporto</h4>
+            <div class="field">
+              <select name="route_${i}_company_mode">
+                <option value="">Selezionare</option>
+                <option>Strada</option>
+                <option>Ferrovia</option>
+                <option>Mare</option>
+                <option>Aereo</option>
+                <option>Intermodale</option>
+              </select>
+            </div>
+
+            <h4>A.3 Tipologia e classe del mezzo</h4>
+            <div class="grid">
+              <div class="field span-4">
+                <label>Tipologia mezzo / servizio</label>
+                <input type="text" name="route_${i}_company_vehicle_type" />
+              </div>
+              <div class="field span-4">
+                <label>Classe del mezzo / categoria / standard emissivo</label>
+                <input type="text" name="route_${i}_company_vehicle_class" />
+              </div>
+              <div class="field span-4">
+                <label>Alimentazione (se disponibile)</label>
+                <input type="text" name="route_${i}_company_energy_source" />
+              </div>
+            </div>
+
+            <h4>A.4 Solo in caso di intermodale</h4>
+            <div class="grid">
+              <div class="field span-4">
+                <label>Combinazione utilizzata</label>
+                <input type="text" name="route_${i}_company_intermodal_combo" />
+              </div>
+              <div class="field span-4">
+                <label>Tipologia mezzi principali utilizzati</label>
+                <input type="text" name="route_${i}_company_intermodal_vehicles" />
+              </div>
+              <div class="field span-4">
+                <label>Classe dei mezzi (se disponibile)</label>
+                <input type="text" name="route_${i}_company_intermodal_class" />
+              </div>
+            </div>
+
+            <h4>A.5 Informazioni aggiuntive</h4>
+            <div class="grid">
+              <div class="field span-6">
+                <label>Trasporto refrigerato</label>
+                <select name="route_${i}_company_refrigerated"><option value="">Selezionare</option><option>Sì</option><option>No</option></select>
+              </div>
+              <div class="field span-6">
+                <label>Merci pericolose</label>
+                <select name="route_${i}_company_dangerous_goods"><option value="">Selezionare</option><option>Sì</option><option>No</option></select>
+              </div>
+              <div class="field span-12">
+                <label>Note operative</label>
+                <textarea name="route_${i}_company_notes"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="subcard thirdparty-section hidden" id="route_${i}_thirdparty_section">
+            <h3>Parte B – Tratta gestita da terzi</h3>
+            <p class="small">Compilare solo se la tratta è gestita interamente da terzi oppure in modo misto.</p>
+
+            <h4>B.1 Informazioni sul partner</h4>
+            <div class="grid">
+              <div class="field span-4">
+                <label>Fornitore / partner logistico</label>
+                <input type="text" name="route_${i}_partner_name" />
+              </div>
+              <div class="field span-4">
+                <label>Parte della tratta affidata a terzi</label>
+                <input type="text" name="route_${i}_partner_segment" />
+              </div>
+              <div class="field span-4">
+                <label>Quota affidata a terzi (%)</label>
+                <input type="text" name="route_${i}_partner_share" />
+              </div>
+            </div>
+
+            <h4>B.2 Dati operativi del segmento affidato a terzi</h4>
+            <div class="grid">
+              <div class="field span-4">
+                <label>Modalità di trasporto</label>
+                <input type="text" name="route_${i}_partner_mode" />
+              </div>
+              <div class="field span-4">
+                <label>Tipologia mezzo / servizio</label>
+                <input type="text" name="route_${i}_partner_vehicle_type" />
+              </div>
+              <div class="field span-4">
+                <label>Classe del mezzo / categoria</label>
+                <input type="text" name="route_${i}_partner_vehicle_class" />
+              </div>
+              <div class="field span-4">
+                <label>Numero spedizioni interessate</label>
+                <input type="text" name="route_${i}_partner_shipments" />
+              </div>
+              <div class="field span-4">
+                <label>Peso medio o totale interessato</label>
+                <input type="text" name="route_${i}_partner_weight" />
+              </div>
+              <div class="field span-4">
+                <label>Volume medio o totale interessato</label>
+                <input type="text" name="route_${i}_partner_volume" />
+              </div>
+            </div>
+
+            <h4>B.3 Dati ambientali eventualmente disponibili dal partner</h4>
+            <div class="grid">
+              <div class="field span-4">
+                <label>Sono disponibili dati ambientali forniti dal partner?</label>
+                <select name="route_${i}_partner_environmental_data_present"><option value="">Selezionare</option><option>Sì</option><option>No</option></select>
+              </div>
+              <div class="field span-4">
+                <label>Valore disponibile</label>
+                <input type="text" name="route_${i}_partner_environmental_value" />
+              </div>
+              <div class="field span-4">
+                <label>Unità di misura</label>
+                <input type="text" name="route_${i}_partner_environmental_unit" />
+              </div>
+              <div class="field span-6">
+                <label>Periodo di riferimento</label>
+                <input type="text" name="route_${i}_partner_environmental_period" />
+              </div>
+              <div class="field span-6">
+                <label>Metodo dichiarato dal partner (se noto)</label>
+                <input type="text" name="route_${i}_partner_environmental_method" />
+              </div>
+            </div>
+
+            <h4>B.4 Informazioni aggiuntive</h4>
+            <div class="grid">
+              <div class="field span-6">
+                <label>Trasporto refrigerato</label>
+                <select name="route_${i}_partner_refrigerated"><option value="">Selezionare</option><option>Sì</option><option>No</option></select>
+              </div>
+              <div class="field span-6">
+                <label>Merci pericolose</label>
+                <select name="route_${i}_partner_dangerous_goods"><option value="">Selezionare</option><option>Sì</option><option>No</option></select>
+              </div>
+              <div class="field span-12">
+                <label>Note</label>
+                <textarea name="route_${i}_partner_notes"></textarea>
+              </div>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderRouteCards() {
+      let html = '';
+      for (let i = 1; i <= routeCount; i++) html += createRouteCard(i);
+      routeCards.innerHTML = html;
+    }
+
+    function toggleManagement(i) {
+      const selected = document.querySelector(`input[name="route_${i}_management"]:checked`)?.value;
+      const companySection = document.getElementById(`route_${i}_company_section`);
+      const thirdpartySection = document.getElementById(`route_${i}_thirdparty_section`);
+      companySection.classList.add('hidden');
+      thirdpartySection.classList.add('hidden');
+      if (selected === '1') companySection.classList.remove('hidden');
+      if (selected === '2') thirdpartySection.classList.remove('hidden');
+      if (selected === '3') {
+        companySection.classList.remove('hidden');
+        thirdpartySection.classList.remove('hidden');
+      }
+    }
+
+    function getPrintableCloneHtml() {
+      const original = document.getElementById('appRoot');
+      const clone = original.cloneNode(true);
+
+      const originalFields = original.querySelectorAll('input, select, textarea');
+      const cloneFields = clone.querySelectorAll('input, select, textarea');
+
+      originalFields.forEach((field, index) => {
+        const clonedField = cloneFields[index];
+        if (!clonedField) return;
+
+        let displayValue = '';
+
+        if (field.tagName === 'SELECT') {
+          displayValue = field.value || '';
+        } else if (field.tagName === 'TEXTAREA') {
+          displayValue = field.value || '';
+        } else if (field.type === 'radio') {
+          const group = original.querySelectorAll(`input[type="radio"][name="${field.name}"]`);
+          if (field.checked) displayValue = field.parentElement ? field.parentElement.textContent.trim() : field.value;
+          if (!field.checked) {
+            clonedField.remove();
+            return;
+          }
+        } else if (field.type === 'checkbox') {
+          displayValue = field.checked ? 'Sì' : 'No';
+        } else {
+          displayValue = field.value || '';
+        }
+
+        const replacement = document.createElement(field.tagName === 'TEXTAREA' ? 'div' : 'span');
+        replacement.className = 'export-value';
+        replacement.style.display = 'block';
+        replacement.style.minHeight = '18px';
+        replacement.style.padding = '6px 8px';
+        replacement.style.border = '1px solid #cfd9e6';
+        replacement.style.borderRadius = '8px';
+        replacement.style.background = '#ffffff';
+        replacement.style.whiteSpace = 'pre-wrap';
+        replacement.textContent = displayValue;
+
+        clonedField.replaceWith(replacement);
+      });
+
+      clone.querySelectorAll('.no-print').forEach(el => el.remove());
+      return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Questionario EcoTransIT 2025</title></head><body>${clone.innerHTML}</body></html>`;
+    }
+
+    function downloadWord() {
+      const content = getPrintableCloneHtml();
+      const blob = new Blob(['\ufeff', content], { type: 'application/msword' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'questionario_ecotransit_csr_2025.doc';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(link.href);
+    }
+
+    function resetFormCompletely() {
+      if (!confirm('Vuoi davvero azzerare tutto il questionario?')) return;
+      document.getElementById('questionnaireForm').reset();
+      for (let i = 1; i <= routeCount; i++) toggleManagement(i);
+    }
+
+    createSummaryRows();
+    renderRouteCards();
+    for (let i = 1; i <= routeCount; i++) toggleManagement(i);
+  </script>
+</body>
+</html>
