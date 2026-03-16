@@ -57,6 +57,14 @@
       opacity: 0.97;
     }
 
+    .notice {
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 14px;
+    }
+
     .top-actions {
       display: flex;
       flex-wrap: wrap;
@@ -285,6 +293,11 @@
 
     .print-only { display: none; }
 
+    .print-table-section {
+      page-break-before: auto;
+      page-break-after: auto;
+    }
+
     @media (max-width: 900px) {
       .span-6, .span-4, .span-3, .span-8, .span-9 { grid-column: span 12; }
       .hero h1 { font-size: 24px; }
@@ -292,12 +305,115 @@
     }
 
     @media print {
-      body { background: white; }
-      .hero { color: #111827; background: white; border: 1px solid #d1d5db; box-shadow: none; }
-      .top-actions, .footer-bar, .no-print { display: none !important; }
-      .container { max-width: 100%; margin: 0; padding: 0; }
-      .section, .route-card, .subcard { box-shadow: none; break-inside: avoid; }
+      @page {
+        size: A4 portrait;
+        margin: 10mm;
+      }
+
+      body {
+        background: white;
+        color: #111827;
+      }
+
+      .hero {
+        color: #111827;
+        background: white;
+        border: 1px solid #d1d5db;
+        box-shadow: none;
+      }
+
+      .top-actions,
+      .footer-bar,
+      .no-print {
+        display: none !important;
+      }
+
+      .container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .section,
+      .route-card,
+      .subcard {
+        box-shadow: none;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
       .print-only { display: block; }
+
+      .print-table-section {
+        page-break-before: always;
+        page-break-after: always;
+      }
+
+      .table-wrap {
+        overflow: visible !important;
+        border: 1px solid #cfd9e6;
+      }
+
+      .print-table-section table {
+        min-width: 0 !important;
+        width: 100% !important;
+        table-layout: fixed;
+      }
+
+      .print-table-section th,
+      .print-table-section td {
+        font-size: 9px !important;
+        padding: 4px !important;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+      }
+
+      .print-table-section td input,
+      .print-table-section td textarea,
+      .print-table-section td select,
+      .print-table-section .export-value {
+        font-size: 9px !important;
+        padding: 3px 4px !important;
+        line-height: 1.2 !important;
+      }
+
+      .print-table-section th:nth-child(1),
+      .print-table-section td:nth-child(1) { width: 5%; }
+
+      .print-table-section th:nth-child(2),
+      .print-table-section td:nth-child(2) { width: 16%; }
+
+      .print-table-section th:nth-child(3),
+      .print-table-section td:nth-child(3) { width: 13%; }
+
+      .print-table-section th:nth-child(4),
+      .print-table-section td:nth-child(4) { width: 13%; }
+
+      .print-table-section th:nth-child(5),
+      .print-table-section td:nth-child(5) { width: 11%; }
+
+      .print-table-section th:nth-child(6),
+      .print-table-section td:nth-child(6) { width: 12%; }
+
+      .print-table-section th:nth-child(7),
+      .print-table-section td:nth-child(7) { width: 12%; }
+
+      .print-table-section th:nth-child(8),
+      .print-table-section td:nth-child(8) { width: 18%; }
+
+      textarea,
+      .export-value {
+        white-space: pre-wrap !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+      }
+
+      input,
+      select,
+      textarea {
+        border: 1px solid #cfd9e6 !important;
+        background: white !important;
+      }
     }
   </style>
 </head>
@@ -323,7 +439,7 @@
     </section>
 
     <form id="questionnaireForm">
-      <section class="section">
+      <section class="section print-table-section">
         <h2>Sezione 1 – Elenco delle 6 principali tratte / spedizioni 2025</h2>
         <p class="lead">Indicare le tratte o spedizioni più frequenti o più rappresentative del 2025.</p>
         <div class="table-wrap">
@@ -434,7 +550,7 @@
       <div class="footer-bar-inner">
         <button class="btn-primary" type="button" onclick="window.print()">PDF</button>
         <button class="btn-secondary" type="button" onclick="downloadWord()">Word</button>
-        </div>
+      </div>
     </div>
   </div>
 
@@ -700,8 +816,10 @@
       const selected = document.querySelector(`input[name="route_${i}_management"]:checked`)?.value;
       const companySection = document.getElementById(`route_${i}_company_section`);
       const thirdpartySection = document.getElementById(`route_${i}_thirdparty_section`);
+
       companySection.classList.add('hidden');
       thirdpartySection.classList.add('hidden');
+
       if (selected === '1') companySection.classList.remove('hidden');
       if (selected === '2') thirdpartySection.classList.remove('hidden');
       if (selected === '3') {
@@ -728,12 +846,11 @@
         } else if (field.tagName === 'TEXTAREA') {
           displayValue = field.value || '';
         } else if (field.type === 'radio') {
-          const group = original.querySelectorAll(`input[type="radio"][name="${field.name}"]`);
-          if (field.checked) displayValue = field.parentElement ? field.parentElement.textContent.trim() : field.value;
           if (!field.checked) {
             clonedField.remove();
             return;
           }
+          displayValue = field.parentElement ? field.parentElement.textContent.trim() : field.value;
         } else if (field.type === 'checkbox') {
           displayValue = field.checked ? 'Sì' : 'No';
         } else {
@@ -749,13 +866,121 @@
         replacement.style.borderRadius = '8px';
         replacement.style.background = '#ffffff';
         replacement.style.whiteSpace = 'pre-wrap';
+        replacement.style.wordBreak = 'break-word';
+        replacement.style.overflowWrap = 'anywhere';
+        replacement.style.fontSize = '12px';
         replacement.textContent = displayValue;
 
         clonedField.replaceWith(replacement);
       });
 
       clone.querySelectorAll('.no-print').forEach(el => el.remove());
-      return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Questionario EcoTransIT 2025</title></head><body>${clone.innerHTML}</body></html>`;
+
+      const styles = `
+        <style>
+          body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #111827;
+            margin: 18px;
+          }
+          .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+          }
+          .hero {
+            background: white !important;
+            color: #111827 !important;
+            border: 1px solid #d1d5db;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 18px;
+          }
+          .section, .route-card, .subcard {
+            border: 1px solid #d9e2ec;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 14px;
+            box-shadow: none !important;
+            break-inside: avoid;
+            page-break-inside: avoid;
+          }
+          .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 10px;
+          }
+          .field {
+            grid-column: span 12;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+          }
+          .span-6 { grid-column: span 6; }
+          .span-4 { grid-column: span 4; }
+          .span-3 { grid-column: span 3; }
+          .span-8 { grid-column: span 8; }
+          .span-9 { grid-column: span 9; }
+          label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #334155;
+          }
+          .table-wrap {
+            overflow: visible;
+            border: 1px solid #d9e2ec;
+            border-radius: 10px;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+          }
+          th, td {
+            border: 1px solid #e5e7eb;
+            padding: 5px;
+            vertical-align: top;
+            text-align: left;
+            font-size: 9px;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+          }
+          th {
+            background: #eef4fb;
+            color: #1f3f63;
+          }
+          .print-table-section {
+            page-break-before: always;
+            page-break-after: always;
+          }
+          .route-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+          }
+          .route-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e4e79;
+          }
+          .badge {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 999px;
+            background: #e9f3ff;
+            color: #1e4e79;
+            font-size: 11px;
+            font-weight: 700;
+          }
+          .small {
+            font-size: 11px;
+            color: #6b7280;
+          }
+        </style>
+      `;
+
+      return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Questionario EcoTransIT 2025</title>${styles}</head><body>${clone.innerHTML}</body></html>`;
     }
 
     function downloadWord() {
